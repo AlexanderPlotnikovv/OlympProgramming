@@ -1,0 +1,261 @@
+Sort and search
+Часто задачи, легко решающиеся с помощью перебора за квадрат, могут решаться с помощью сортировки
+Решение задачи о максимальном одновременном событии на стр 67
+Решение задачи о расписании на стр 68
+Решение задачи о сроках выполения работы на стр 69
+Ну конечно бинпоиск
+Можно еще искать прыжками сначала смотрим n/2 потом в два раза меньше и так геом прогрессией
+выполнение бинописка по ответу за O(n log(z))
+Code:
+#include <iostream>
+#include <vector>
+#include <iomanip>
+#include <map>
+#include <set>
+#include <string>
+#include <stack>
+#include <queue>
+#include <cmath>
+#include <algorithm>
+#include <complex>
+#include <deque>
+#include <list>
+#include <functional>
+#include <random>
+#include <unordered_map>
+#include <unordered_set>
+#include <forward_list>
+#include <array>
+#include <typeinfo>
+#include <numeric>
+#include <memory>
+using namespace std;
+
+typedef long long ll;
+typedef vector<int> vi;
+typedef vector<bool> vb;
+typedef std::string str;
+typedef vector<vi> vii;
+typedef vector<str> vs;
+typedef stack<int> s;
+typedef queue<int> q;
+typedef deque<int> d;
+typedef vector<pair<int, int>> vpii;
+
+int main()
+{
+	/*vi v = {1,7,4,89,5,0,456,23,5};
+	int max = -(1 << 30);
+	for (auto elem : v)
+	{
+		if (max < elem)
+		{
+			max = elem;
+		}
+	}
+	vi vec(max + 1);
+	for (auto elem : v)
+	{
+		vec[elem]++;
+	}
+	for (int j = 0;j<=max;++j)
+	{
+		if (vec[j] > 0)
+		{
+			for (int i = 0; i < vec[j]; ++i)
+			{
+				cout << j << " ";
+			}
+		}
+	}*/
+	int n;
+	cin >> n;
+	vpii vec;
+	for (int i = 0; i < n; ++i)
+	{
+		int a, b;
+		cin >> a >> b;
+		vec.push_back({ a,1 });
+		vec.push_back({ b,0 });
+	}
+	sort(vec.begin(), vec.end());
+	int max = 0;
+	int k = 0;
+	for (auto elem : vec)
+	{
+		if (elem.second == 1)
+		{
+			++k;
+			if (k > max)
+			{
+				max = k;
+			}
+		}
+		else
+		{
+			--k;
+		}
+	}
+	cout << max;
+	return 0;
+}
+
+int f(int x, int y, int t)
+{
+	return (x + y) * t;
+}
+
+int mintime(int x, int y, int n)
+{
+	int l = 0;
+	int r = n+1;
+	while (r - l > 1)
+	{
+		int mid = (l + r) / 2;
+		if (f(x, y, mid) >= n)
+		{
+			if (f(x, y, mid - 1) < n)
+			{
+				return mid;
+			}
+			else
+			{
+				r = mid;
+			}
+		}
+		else
+		{
+			l = mid;
+		}
+	}
+	return -1;
+}
+
+int f(int N, int A, int B, int C, int i)
+{
+	return C+max(A*(N-i),B*(i-1));
+}
+
+int main()
+{
+	int n, a, b, c;
+	cin >> n >> a >> b >> c;
+	int l = 1;
+	int r = n;
+	while (r - l > 1)
+	{
+		if (r - l < 3)
+		{
+			//cout << l << " " << r;
+			int min = (1<<30);
+			vi vec(3);
+			vec[0] = f(n, a, b, c, l);
+			vec[1] = f(n, a, b, c, l+1);
+			vec[2] = f(n, a, b, c, r);
+			//cout << vec[0] << " " << vec[1] << " " << vec[2] << "\n";
+			for (int i = 0;i<3;++i)
+			{
+				if (vec[i] < min)
+				{
+					min = i+1+l;
+				}
+			}
+			//cout << min;
+			l = min;
+			r = min;
+			break;
+		}
+		else
+		{
+			int m1 = l + (r - l) / 3;
+			int m2 = r - (r - l) / 3;
+			if (f(n, a, b, c, m1) == f(n, a, b, c, m2))
+			{
+				l = m1;
+				r = m2;
+			}
+			else if (f(n, a, b, c, m1) > f(n, a, b, c, m2))
+			{
+				l = m1;
+			}
+			else
+			{
+				r = m2;
+			}
+		}
+	}
+	//cout << l << " " << r;
+	cout << min(f(n,a,b,c,l), f(n, a, b, c, r));
+	return 0;
+}
+
+void printvec(vi vec)
+{
+	for (auto elem : vec)
+	{
+		cout << elem << " ";
+	}
+	cout << "\n";
+}
+
+void mergesort(vi& vec, int l,int r,int& u)
+{
+	if (l>=r)
+	{
+		return ;
+	}
+	int mid = l + (r - l) / 2;
+	mergesort(vec, l, mid,u);
+	mergesort(vec, mid + 1, r,u);
+	vi lm(mid - l + 1);
+	vi rm(r - mid);
+	for (int i = 0; i < lm.size(); ++i)
+	{
+		lm[i] = vec[l + i];
+	}
+	for (int i = 0; i < rm.size(); ++i)
+	{
+		rm[i] = vec[mid + 1 + i];
+	}
+	int i = 0, j = 0;
+	int k = l;
+	while (i < lm.size() && j < rm.size())
+	{
+		if (lm[i] > rm[j])
+		{
+			vec[k++] = rm[j++];
+			u += (lm.size() - i);
+
+		}
+		else
+		{
+			vec[k++] = lm[i++];
+		}
+	}
+	while (i < lm.size())
+	{
+		vec[k++] = lm[i++];
+	}
+	while (i < rm.size())
+	{
+		vec[k++] = rm[j++];
+	}
+}
+
+void inputvec(vi& vec)
+{
+	for (auto& elem : vec)
+	{
+		cin >> elem;
+	}
+}
+
+int main()
+{
+	int u = 0;
+	vi vec(6);
+	inputvec(vec);
+	mergesort(vec, 0, vec.size()-1,u);
+	cout << u;
+	return 0;
+}

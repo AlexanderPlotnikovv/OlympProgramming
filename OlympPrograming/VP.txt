@@ -1,0 +1,170 @@
+Code:
+//int main()
+//{
+//	ll n,a,b;
+//	cin >> n >> a >> b;
+//	ll maxx, minn;
+//	maxx = -(1 << 33);
+//	minn = -maxx;
+//	if (a == b)
+//	{
+//		maxx = n;
+//	}
+//	else
+//	{
+//		maxx = n - 1;
+//	}
+//	if (n > a + b)
+//	{
+//		minn = n - (a + b);
+//	}
+//	else
+//	{
+//		minn = 0;
+//	}
+//	cout << maxx << "\n" << minn;
+//	return 0;
+//}
+
+int main()
+{
+	long long int n, m, k;
+	cin >> n >> m >> k;
+	vpii teleports(k);
+	for (auto& elem : teleports)
+	{
+		cin >> elem.first >> elem.second;
+	}
+	vector<vector<ll>> table(n + 1, vi(m + 1));
+	vector<vector<ll>> dp(n + 1, vi(m + 1));
+	for (ll i = 0; i < table.size(); ++i)
+	{
+		for (ll j = 0; j < table[i].size(); ++j)
+		{
+			if (i == 0 || j == 0)
+			{
+				table[i][j] = -1;
+			}
+			else
+			{
+				cin >> table[i][j];
+			}
+		}
+	}
+	for (ll i = 0; i < table.size(); ++i)
+	{
+		for (ll j = 0; j < table[i].size(); ++j)
+		{
+			if (i == 0 || j == 0)
+			{
+				dp[i][j] = 0;
+			}
+			else if (i == 1 && j == 1)
+			{
+				dp[i][j] = table[i][j];
+
+			}
+			else
+			{
+				dp[i][j] = table[i][j] + max(dp[i][j - 1], dp[i - 1][j]);
+			}
+		}
+	}
+	long double maxx = (static_cast<long double>(dp[n][m]) / (n + m - 1));
+	vpii ent;
+	for (ll i = 0; i < table.size(); ++i)
+	{
+		for (ll j = 0; j < table[i].size(); ++j)
+		{
+			for (auto elem : teleports)
+			{
+				if (elem.first == i && elem.second == j)
+				{
+					ent.push_back({ dp[i][j],i + j - 1 });
+				}
+			}
+		}
+	}
+	vpii out;
+	for (auto it : teleports)
+	{
+		ll i1 = 0;
+		ll j1 = 0;
+		vii matrix(dp.size() - (it.first - 1), vi(dp[0].size() - (it.second - 1)));
+		for (ll i = it.first - 1; i < table.size(); ++i)
+		{
+			for (ll j = it.second - 1; j < table[0].size(); ++j)
+			{
+				if (i1 == 0 || j1 == 0)
+				{
+					matrix[i1][j1] = 0;
+				}
+				else
+				{
+					matrix[i1][j1] = table[i][j];
+				}
+				++j1;
+			}
+			++i1;
+			j1 = 0;
+		}
+		vii dp1(dp.size() - (it.first - 1), vi(dp[0].size() - (it.second - 1)));
+		for (ll i = 0; i < matrix.size(); ++i)
+		{
+			for (ll j = 0; j < matrix[i].size(); ++j)
+			{
+				if (i == 0 || j == 0)
+				{
+					dp1[i][j] = 0;
+				}
+				else if (i == 1 && j == 1)
+				{
+					dp1[i][j] = matrix[i][j];
+
+				}
+				else
+				{
+					dp1[i][j] = matrix[i][j] + max(dp1[i][j - 1], dp1[i - 1][j]);
+				}
+			}
+		}
+		out.push_back({ dp1[dp1.size() - 1][dp1[0].size() - 1],dp1.size()+dp1[0].size()-3});
+	}
+	pii fin1;
+	long double max1 = -(1 << 30);
+	for (auto& elem : ent)
+	{
+		if (max1 < static_cast<long double>(elem.first) / elem.second)
+		{
+			max1 = static_cast<long double>(elem.first) / elem.second;
+			fin1 = { elem.first, elem.second };
+		}
+	}
+	max1 = -(1 << 30);
+	pii fin2;
+	for (auto& elem : out)
+	{
+		if (max1 < static_cast<long double>(elem.first) / elem.second)
+		{
+			max1 = static_cast<long double>(elem.first) / elem.second;
+			fin2 = { elem.first, elem.second };
+		}
+	}
+	if (k == 0)
+	{
+		cout << std::fixed << std::setprecision(10) << maxx;
+	}
+	else
+	{
+		long double fin = (static_cast<double>(fin1.first) + fin2.first) / (fin1.second + fin2.second);
+		cout << std::fixed << std::setprecision(10) << max(maxx,fin);
+	}
+	/*for (auto vec : dp)
+	{
+		for (auto it : vec)
+		{
+			cout << it << " ";
+		}
+		cout << "\n";
+	}*/
+}

@@ -1,0 +1,53 @@
+NP-трудные задачи превосходят стандартные сложности
+if n = 10^5 => вероятно сложность O(NlogN) || O(N)
+Подробнее см таблицу ожидаемой временной сложности, см стр. 48
+Одна из техник оптимизации: use break
+Для быстрой работы процессоры используют кеши - небольшие участки памяти для быстрой передачи процу на обработку
+допустим, если мы считаем сумму элементов двумерного массива через sum+=x[i][j], то это эффективнее чем sum==x[j][i] поскольку происходит обращение к последовательным ячейкам
+code:
+#include <iostream>
+#include <vector>
+#include <iomanip>
+#include <map>
+#include <set>
+#include <string>
+#include <stack>
+#include <queue>
+#include <cmath>
+#include <algorithm>
+#include <complex>
+#include <deque>
+#include <list>
+#include <functional>
+#include <random>
+#include <unordered_map>
+#include <unordered_set>
+#include <forward_list>
+#include <array>
+#include <typeinfo>
+#include <numeric>
+#include <memory>
+using namespace std;
+
+typedef long long ll;
+typedef vector<int> vi;
+typedef vector<bool> vb;
+typedef std::string str;
+typedef vector<vi> vii;
+typedef vector<str> vs;
+typedef stack<int> s;
+typedef queue<int> q;
+typedef deque<int> d;
+
+int main()
+{
+	vi vec = { 1,5,-4,65,-3,12,43,-132,5,0,-7,-8,98 };
+	int best = 0, sum = 0;
+	for (int i = 0; i < vec.size(); ++i)
+	{
+		sum = max(vec[i], sum + vec[i]);
+		best = max(best, sum);
+	}
+	cout << best;
+	return 0;
+}

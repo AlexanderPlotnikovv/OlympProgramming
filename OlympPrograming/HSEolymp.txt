@@ -1,0 +1,68 @@
+int n;
+	cin >> n;
+	pii pair = { 0,0 };
+	int c = 0;
+	int save = 0;
+	for (int i = 0; i < n; ++i)
+	{
+		int a, b;
+		cin >> a >> b;
+		if (i == 0)
+		{
+			pair.first = a;
+			pair.second = b;
+		}
+		if (pair.first != a && pair.first != b)
+		{
+			//cout << "I'm here!" << "\n";
+			pair.first = (1<<30);
+		}
+		if (pair.second != a && pair.second != b)
+		{
+			//cout << "I'm here!" << "\n";
+			pair.second = (1<<30);
+		}
+		if (pair.first == (1 << 30) && pair.second == (1 << 30))
+		{
+			break;
+		}
+		save = min(pair.first, pair.second);
+		++c;
+		//cout << c << " " << save << " " << pair.first << " " << pair.second << "\n";
+	}
+	cout << c << " " << save;
+
+	int n, m;
+	cin >> n >> m;
+	int k;
+	cin >> k;
+	if (k == 1)
+	{
+		cout << 0;
+	}
+	else if (k > m)
+	{
+		cout << n * (m - 1) + m * (n - 1);
+	}
+	else
+	{
+		cout << n * (m - 1);
+	}
+
+	void solve() {
+	int n;
+	cin >> n;
+	if (n & 1) {
+		cout << n - 3 << '\n';
+		for (int i = 2; i + 1 < n; i++) {
+			cout << 1 << " " << i + 1 << '\n';
+		}
+	}
+	else {
+		cout << n - 2 << '\n';
+		for (int i = 2; i + 1 < n; i++) {
+			cout << 1 << " " << i + 1 << '\n';
+		}
+		cout << n / 2 << " " << n / 2 + 2 << '\n';
+	}
+}

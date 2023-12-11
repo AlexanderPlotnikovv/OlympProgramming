@@ -1,0 +1,255 @@
+1. Средства c++
+если строка имеет пробелы, use getline
+если размер неизвестен то используй while(cin>>s)
+Свойства при делении с остатком:
+(a+b)%m = (a%m + b%m)%m
+(a-b)%m = (a%m - b%m)%m
+(a*b)%m = (a%m * b%m)%m
+если получается отрицательный остаток то прибавляем m
+Для сокращения кода можно использовать typedef и макросы
+int = -x
+unsigned int = 2^31-x
+Побитовые операции 
+& И
+| ИЛИ
+^ ИСКЛ ИЛИ
+~ НЕ
+~x = -x-1
+<< Битовый сдвиг
+Битовая маска - число вида 1<<k
+k-й бит не равен 0 только если x&(1<<k) != 0, where x - some number
+x|(1<<k) превращает k-й бит x в 1
+x&~(1<<k) в 0
+x&(x-1) ласт бит в 0
+x&-x=1
+x|(x-1) инвертирует все биты кроме первого
+if (!x&(x-1)) => x = 2^k
+Представление множества изи чисел от 0 до n-1 можно представить в виде n - разрядного двоичного числа, например, {1,3,5} = 101010;
+Пересечение множеств можно представить в виде &, объединение в виде |
+если идти от 0 до 2^n то можно перебрать все подмножества
+Другой вариант
+int b = 0;
+while (b = (b-x)&x);
+Существует структура данных bitset
+bitset<10> set; на 10 элементов
+Метод count возвращает кол-во единичных битов в битовом множестве
+
+Code:
+#include <iostream>
+#include <vector>
+#include <iomanip>
+#include <map>
+#include <set>
+#include <string>
+#include <stack>
+#include <queue>
+#include <cmath>
+#include <algorithm>
+#include <complex>
+#include <deque>
+#include <list>
+#include <functional>
+#include <random>
+#include <unordered_map>
+#include <unordered_set>
+#include <forward_list>
+#include <array>
+#include <typeinfo>
+#include <numeric>
+#include <memory>
+using namespace std;
+
+typedef long long ll;
+typedef vector<int> vi;
+typedef vector<bool> vb;
+typedef std::string str;
+
+int sumdigits(int num, int count = 0)
+{
+	if (num == 0)
+	{
+		return count;
+	}
+	count += num % 10;
+	return sumdigits(num / 10, count);
+}
+
+int countdigits(int num, int count = 0)
+{
+	if (num == 0)
+	{
+		return count;
+	}
+	count++;
+	return countdigits(num / 10, count);
+}
+
+
+int deg(int a, int pow, vector<int> vec)
+{
+	if (vec[pow] != 0)
+	{
+		return vec[pow];
+	}
+	if (pow == 0)
+	{
+		return 1;
+	}
+	if (pow % 2)
+	{
+		vec[pow] = a * deg(a, pow - 1, vec);
+		return vec[pow];
+	}
+	if (pow % 2 == 0)
+	{
+		vec[pow] = deg(a, pow / 2, vec);
+		return vec[pow]*vec[pow];
+	}
+}
+
+int robot(int x, int y)
+{
+	if (x == 0 || y == 0)
+	{
+		return 1;
+	}
+	return robot(x, y - 1) + robot(x - 1, y);
+}
+
+bool fullused(vb used)
+{
+	for (auto elem : used)
+	{
+		if (elem == 0)
+		{
+			return 0;
+		}
+	}
+	return 1;
+}
+
+void search(vector<int> vec, vi result, int& min, int k = 0)
+{
+	if (k == result.size())
+	{
+		vi help;
+		for (auto elem : result)
+		{
+			if (std::find(vec.begin(), vec.end(), elem) == vec.end())
+			{
+				help.push_back(elem);
+			}
+		}
+		int k = 0;
+		int k1 = 0;
+		for (auto elem : vec)
+		{
+			k += elem;
+		}
+		for (auto elem : help)
+		{
+			k1 += elem;
+		}
+		if (abs(k - k1) < min)
+		{
+			min = abs(k - k1);
+		}
+	}
+	else
+	{
+		vec.push_back(result[k]);
+		search(vec, result, min, k+1);
+		vec.pop_back();
+		search(vec, result, min, k+1);
+	}
+}
+
+void hanoi(int n, int i = 1, int j = 3, int tmp = 2)
+{
+	if (n == 1)
+	{
+		cout << 1 << " " << i << " " << j << "\n";
+	}
+	else
+	{
+		hanoi(n - 1, i, 6 - i - j);
+		std::cout << n << " " << i << " " << j << "\n";
+		hanoi(n - 1, 6 - i - j, j);
+	}
+}
+
+void c(int a, vi vec, vector<vi>& vecvec)
+{
+	if (a == 0)
+	{
+		
+		vecvec.push_back(vec);
+	}
+	else
+	{
+		for (int i = 1; i <= a; ++i)
+		{
+			if (vec.size() == 0 && a-i>=0)
+			{
+				vi vec1 = vec;
+				vec1.push_back(i);
+				c(a - i, vec1, vecvec);
+				//std::cout << i << " ";
+			}
+			else
+			{
+				if (i >= vec[vec.size() - 1] && a-i>=0)
+				{
+					vi vec1 = vec;
+					vec1.push_back(i);
+					c(a - i, vec1,vecvec);
+					//std::cout << i << " ";
+				}
+			}
+		}
+	}
+}
+
+int main()
+{
+	vector<vi> vecvec;
+	int n;
+	cin >> n;
+	vi vec;
+	c(n, vec, vecvec);
+	std::reverse(vecvec.begin(), vecvec.end());
+	for (auto elem : vecvec)
+	{
+		for (auto it : elem)
+		{
+			cout << it << " ";
+		}
+		cout << endl;
+	}
+	return 0;
+}
+
+int n, i;
+	cin >> n >> i;
+	if ((n | (1 << i)) == n)
+	{
+		cout << 1;
+	}
+	else
+	{
+		cout << 0;
+	}
+	int n, i;
+	cin >> n >> i;
+	for (int j = 0; j <= i; ++j)
+	{
+		if (n == (n | (1 << j)))
+		{
+			n = n ^ (1 << j);
+		}
+		else
+		{
+			n = n & ~(1 << j);
+		}
+	}
+	cout << n;

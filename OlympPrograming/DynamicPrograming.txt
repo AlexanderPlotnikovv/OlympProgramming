@@ -1,0 +1,603 @@
+ДП используется для нахождения оптимального решения задачи, находя для подзадачи, или количество таких решений
+Жадный алгоритм плохо работает в некоторых задачах, а перебор долгий
+елси занем предыдущий шаг, подсчитаем оптимальный вариант для следующего, и пока не дойдем до ответа
+ДП включает базу и переход
+Используем меморизацию
+Пример с монетами стр 90
+Code:
+/*int n, k;
+	cin >> n >> k;
+	vi coins(k);
+	for(auto & elem : coins)
+	{
+		cin >> elem;
+	}
+	vi dp(n + 1);
+	dp[0] = 0;
+	for (int i = 1; i <= n; ++i)
+	{
+		dp[i] = (1 << 30);
+		for (auto x : coins)
+		{
+			if (i>=x)
+			{
+				dp[i] = min(dp[i], dp[i - x] + 1);
+			}
+		}
+	}
+	cout << dp[n];*/
+
+	/*int n, x;
+	cin >> n >> x;
+	vi count(n + 1);
+	count[0] = 1;
+	for (int i = 1; i <= n; ++i)
+	{
+		for (auto c : count)
+		{
+			if (i >= c)
+			{
+				count[i] += count[i - c];
+			}
+		}
+	}*/
+
+	/*int n;
+	cin >> n;
+	vi arr(n);
+	for (auto& elem : arr)
+	{
+		cin >> elem;
+	}
+	vi dp(n);
+	vi answer;
+	vii p(n);
+	for (int i = 0; i < n; ++i)
+	{
+		dp[i] = 1;
+		p[i].push_back(arr[i]);
+		for (int j = 0; j < i; ++j)
+		{
+			if (arr[j] < arr[i])
+			{
+				int k = dp[i];
+				dp[i] = max(dp[i], dp[j] + 1);
+				if (dp[i] == dp[j] + 1 && dp[i] > k)
+				{
+					p[i] = p[j];
+					p[i].push_back(arr[i]);
+				}
+			}
+		}
+	}
+	for (auto& elem : p)
+	{
+		for (auto t : elem)
+		{
+			cout << t << " ";
+		}
+		cout << "\n";
+	}*/
+
+	//int c;
+	//cin >> c;
+	//vi ingots(c);
+	//inputvec(ingots);
+	//int n = 0;
+	//for (auto elem : ingots)
+	//{
+	//	n += elem;
+	//}
+	//cout << ingots.size();
+	//cout << c+1 << " " << n+1 << "\n";
+	//vbb dp(c+1, vb(n + 1));
+	//for (int i = 0; i <= c; ++i)
+	//{
+	//	dp[i][0] = 1;
+	//}
+	////cout << dp[4][12];
+	//for (int i = 1; i <= c; ++i)
+	//{
+	//	for (int j = 1; j <= n; ++j)
+	//	{
+	//		if (j >= ingots[i-1])
+	//		{
+	//			cout << i << " " << j;
+	//			dp[i][j] |= dp[i - 1][j - ingots[i-1]];
+	//		}
+	//		dp[i][j] |= dp[i - 1][j];
+	//	}
+	//}
+	//for (auto vec : dp)
+	//{
+	//	printvec(vec);
+	//}
+
+	/*int c;
+	cin >> c;
+	vi ingots(c);
+	for (auto& elem : ingots)
+	{
+		cin >> elem;
+	}
+	vb dp(c + 1);
+	dp[0] = 1;
+	for (int i = 1; i <= 12; ++i)
+	{
+		for (int j = 5; j >= 1; --j)
+		{
+			cout << i << " " << j;
+			int x = i - ingots[j-1];
+			if (x > 0)
+			{
+				dp[x] |= dp[i];
+			}
+		}
+	}
+	printvec(dp);*/
+
+	int n;
+	cin >> n;
+	vi vec(n);
+	for (auto& elem : vec)
+	{
+		cin >> elem;
+	}
+	int len = -23;
+	vi dp(n, (1 << 30));
+	dp[0] = -(1 << 30);
+	for (int i = 0; i < n; ++i)
+	{
+		auto it = upper_bound(dp.begin(), dp.end(), vec[i]);
+		int j = distance(dp.begin(), it);
+		if (vec[i] > dp[j - 1] && vec[i] < dp[j])
+		{
+			dp[j] = vec[i];
+			len = max(len, j);
+		}
+	}
+	cout << len;
+
+	int n, m;
+	cin >> n >> m;
+	vbb castle(n, vb(m));
+	for (auto& vec : castle)
+	{
+		for (auto& elem : vec)
+		{
+			cin >> elem;
+		}
+	}
+	vii dp(n, vi(m));
+	for (int i = 0; i < m; ++i)
+	{
+		if (castle[0][i] == 0)
+		{
+			break;
+		}
+		else
+		{
+			dp[0][i] = 1;
+		}
+	}
+	for (int i = 0; i < n; ++i)
+	{
+		if (castle[i][0] == 0)
+		{
+			break;
+		}
+		else
+		{
+			dp[i][0] = 1;
+		}
+	}
+	for (int i = 1; i < n; ++i)
+	{
+		for (int j = 1; j < m; ++j)
+		{
+			if (castle[i][j] == 0)
+			{
+
+			}
+			else
+			{
+				dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+			}
+		}
+	}
+	if (dp.back().back() == 0)
+	{
+		cout << "Impossible";
+	}
+	else
+	{
+		cout << dp.back().back();
+	}
+
+	fstream file("27_A_11244.txt");
+	ll n, t, sum;
+	file >> n >> t >> sum;
+	vpii vec(n);
+	for (auto& elem : vec)
+	{
+		file >> elem.first >> elem.second;
+	}
+	file.close();
+	vi bariga1;
+	ll ost = 0;
+	for (int i = 0; i < n; ++i)
+	{
+		if (i == 0)
+		{
+			bariga1.push_back(sum / vec[i].first);
+			ost = sum - (sum / vec[i].first)*vec[i].first;
+		}
+		else
+		{
+			if (sum / vec[i].first > bariga1.back())
+			{
+				bariga1.push_back(sum / vec[i].first);
+				ost = sum - (sum / vec[i].first) * vec[i].first;
+			}
+			else
+			{
+				bariga1.push_back(bariga1.back());
+			}
+		}
+	}
+	ll finalsum = 0;
+	vi bar2(n);
+	for (int i = 0; i < n; ++i)
+	{
+		if (i < t)
+		{
+			bar2[i] = 0;
+		}
+		else
+		{
+			//cout << vec[i].second << " " << ost << " " << bariga1[i - t] << "\n";
+			bar2[i] = ost + bariga1[i-t] * vec[i].second;
+		}
+	}
+	ll maxx = -324424;
+	for (auto it : bar2)
+	{
+		if (maxx < it)
+		{
+			maxx = it;
+		}
+	}
+	for (auto elem : bar2)
+	{
+		//cout << elem << " ";
+	}
+	cout << maxx-sum;
+	return 0;
+
+	#include <iostream>
+#include <vector>
+#include <iomanip>
+#include <map>
+#include <set>
+#include <string>
+#include <stack>
+#include <queue>
+#include <cmath>
+#include <algorithm>
+#include <complex>
+#include <deque>
+#include <list>
+#include <functional>
+#include <random>
+#include <unordered_map>
+#include <unordered_set>
+#include <forward_list>
+#include <array>
+#include <typeinfo>
+#include <numeric>
+#include <memory>
+#include <fstream>
+
+using namespace std;
+
+typedef long long ll;
+typedef vector<ll> vi;
+typedef vector<ll> vb;
+typedef std::string str;
+typedef vector<vi> vii;
+typedef vector<str> vs;
+typedef stack<ll> s;
+typedef queue<ll> q;
+typedef deque<ll> d;
+typedef vector<pair<ll, ll>> vpii;
+typedef vector<char> vchar;
+typedef vector<vchar> vcchar;
+typedef pair<ll, ll> pii;
+typedef unordered_set<ll> uset;
+typedef unordered_map<ll,ll> umapint;
+typedef vector<vs> vss;
+typedef vector<vb> vbb;
+
+
+void printvec(vi vec)
+{
+	for (auto elem : vec)
+	{
+		cout << elem << " ";
+	}
+	cout << "\n";
+}
+
+void inputvec(vi& vec)
+{
+	for (auto& elem : vec)
+	{
+		cin >> elem;
+	}
+}
+
+bool have(int a, int n = 8)
+{
+	return (a >= 0 && a < n);
+}
+
+int main()
+{
+	vii chessboard(8, vi(8,10));
+	vii dp = chessboard;
+	dp[0][0] = 0;
+	for (int h = 0; h < 3; ++h)
+	{
+		for (int i = 0; i < dp.size(); ++i)
+		{
+			for (int j = 0; j < dp[i].size(); ++j)
+			{
+				if (have(i - 1) && have(j - 2) && dp[i - 1][j - 2] != 10)
+				{
+					dp[i][j] = min(dp[i][j], dp[i - 1][j - 2] + 1);
+				}
+				if (have(i - 2) && have(j - 1) && dp[i - 2][j - 1] != 10)
+				{
+					dp[i][j] = min(dp[i][j], dp[i - 2][j - 1] + 1);
+				}
+				if (have(i - 2) && have(j + 1) && dp[i - 2][j + 1] != 10)
+				{
+					dp[i][j] = min(dp[i][j], dp[i - 2][j + 1] + 1);
+				}
+				if (have(i - 1) && have(j + 2) && dp[i - 1][j + 2] != 10)
+				{
+					dp[i][j] = min(dp[i][j], dp[i - 1][j + 2] + 1);
+				}
+				if (have(i + 1) && have(j + 2) && dp[i + 1][j + 2] != 10)
+				{
+					dp[i][j] = min(dp[i][j], dp[i + 1][j + 2] + 1);
+				}
+				if (have(i + 2) && have(j + 1) && dp[i + 2][j + 1] != 10)
+				{
+					dp[i][j] = min(dp[i][j], dp[i + 2][j + 1] + 1);
+				}
+				if (have(i + 2) && have(j - 1) && dp[i + 2][j - 1] != 10)
+				{
+					dp[i][j] = min(dp[i][j], dp[i + 2][j - 1] + 1);
+				}
+				if (have(i + 1) && have(j - 2) && dp[i + 1][j - 2] != 10)
+				{
+					dp[i][j] = min(dp[i][j], dp[i + 1][j - 2] + 1);
+				}
+			}
+		}
+	}
+
+	for (auto row : dp)
+	{
+		for (auto elem : row)
+		{
+			cout << elem << " ";
+		}
+		cout << "\n";
+	}
+	return 0;
+}
+
+ll n;
+	cin >> n;
+	vi vec(n);
+	inputvec(vec);
+	ll count;
+	cin >> count;
+	vi dp(count + 1);
+	dp[0] = 0;
+	ll k = 0;
+	vii p(count+1);
+	p[0] = {};
+	for (int i = 1; i <= count; ++i)
+	{
+		for (int j = 0;j<vec.size();++j)
+		{
+			if (i == vec[j])
+			{
+				dp[i] = 1;
+				k = j;
+				p[i] = { i };
+				break;
+			}
+		}
+		if (dp[i] != 1)
+		{
+			dp[i] = (1 << 30);
+			if (i < vec[0])
+			{
+				continue;
+			}
+			for (int j = 0; j < k+1; ++j)
+			{
+				//cout << i << " ";
+				if (dp[i] > dp[i - vec[j]] + 1)
+				{
+					dp[i] = min(dp[i], dp[i - vec[j]] + 1);
+					p[i] = p[i - vec[j]];
+					p[i].push_back(vec[j]);
+				}
+			}
+		}
+	}
+	if (dp[count] == (1 << 30))
+	{
+		cout << -1;
+	}
+	else
+	{
+		sort(p[count].begin(), p[count].end());
+		cout << dp[count] << "\n";
+		printvec(p[count]);
+	}
+
+	str s;
+	cin >> s;
+	vi storage;
+	vi dp(s.size() + 1, 0);
+	for (int j = 1; j <= s.size(); ++j)
+	{
+		dp[j] = dp[j - 1];
+		if (s[j - 1] == 'Q')
+		{
+			dp[j]++;
+		}
+	}
+	storage = dp;
+	for (int j = 1; j <= s.size(); ++j)
+	{
+		dp[j] = dp[j - 1];
+		if (s[j - 1] == 'A')
+		{
+			dp[j]+=storage[j];
+		}
+	}
+	storage = dp;
+	for (int j = 1; j <= s.size(); ++j)
+	{
+		dp[j] = dp[j - 1];
+		if (s[j - 1] == 'Q')
+		{
+			dp[j] += storage[j];
+		}
+	}
+	cout << dp[s.size()];
+
+	int n;
+	cin >> n;
+	vi vec(n);
+	inputvec(vec);
+	vi dp(n + 1);
+	dp[0] = 0;
+	//int k = 0;
+	for (int i = 1; i <= n; ++i)
+	{
+		if (vec[i - 1] + dp[i-1] <= 0)
+		{
+			dp[i] = 0;
+		}
+		else
+		{
+			dp[i] = vec[i - 1] + dp[i - 1];
+		}
+	}
+	printvec(dp);
+	cout << maxv(dp);
+
+	ll n;
+	cin >> n;
+	vi vec(n);
+	inputvec(vec);
+	if (sumvec(vec) % 2)
+	{
+		cout << "NO";
+	}
+	else
+	{
+		ll sum = sumvec(vec) / 2;
+		vbb dp(n + 1, vb(sum + 1, 0));
+		for (int i = 0; i <= n; ++i)
+		{
+			dp[i][0] = true;
+		}
+		for (int i = 1; i <= n; ++i)
+		{
+			//cout << i << ") ";
+			for (int j = 1; j <= sum; ++j)
+			{
+				//cout << j << " ";
+				dp[i][j] = dp[i - 1][j];
+				if (j - vec[i - 1]>=0)
+				{
+					dp[i][j] = dp[i][j] || dp[i - 1][j - vec[i - 1]];
+				}
+			}
+			//cout << "\n";
+		}
+		/*for (auto elem : dp)
+		{
+			printvecb(elem);
+		}*/
+		if (dp[n][sum])
+		{
+			cout << "YES";
+		}
+		else
+		{
+			cout << "NO";
+		}
+	}
+
+	str s1, s2;
+	cin >> s1 >> s2;
+	vii dp(s1.size() + 1, vi(s2.size() + 1, 0));
+	for (int i = 0; i <= s1.size(); ++i)
+	{
+		for (int j = 0; j <= s2.size(); ++j)
+		{
+			if (i == 0 || j == 0)
+			{
+				dp[i][j] = max(i, j);
+			}
+			else
+			{
+				if (s1[i - 1] == s2[j - 1])
+				{
+					dp[i][j] = dp[i - 1][j - 1];
+				}
+				else
+				{
+					ll minn = min(dp[i - 1][j - 1], dp[i - 1][j]);
+					dp[i][j] = 1 + min(minn, dp[i][j - 1]);
+				}
+			}
+		}
+	}
+	cout << dp[s1.size()][s2.size()];
+
+	ll n;
+	cin >> n;
+	vb dp(n + 1, 0);
+	vii p(n+1);
+	dp[2020] = true;
+	p[2020].push_back(2020);
+	dp[2021] = true;
+	p[2021].push_back(2021);
+	for (int i = 2022; i <= n; ++i)
+	{
+		if (dp[i - 2020])
+		{
+			dp[i] = true;
+			p[i] = p[i - 2020];
+			p[i].push_back(2020);
+		}
+		else if (dp[i - 2021])
+		{
+			dp[i] = true;
+			p[i] = p[i - 2021];
+			p[i].push_back(2021);
+		}
+	}
+	cout << dp[n] << "\n";
+	printvec(p[n]);

@@ -1,0 +1,296 @@
+метод back() возращает последний элемент вектора
+Диапазон - последогвательность стурктуры данных
+метод lower_bound возвращает итератор на первый элемент, который не больше x, а upper_bound - больше x
+чтобы создать множество из элемментов отсортированного множества, можно отсортировать вектор, а потом юзнуть v.erase(unique(v.begin(),v.end(),v.end()))
+метод find() возращает итератор на элемент со значением x
+метод count() указывает размер сета
+Мультимножества (стр 80)
+Есть также очереди с приоритетом и множества, основанные на политиках (стр 82-83)
+множества на политиках имеют возможность получения по индексации элеммента методом find_by_order(x), x - индекс, возвращается итератор за log n
+Тесты скорости раздичных алгоритмов с различными структурами данных на стр 84-85
+Code:
+vs vec;
+	set<string> set2;
+	set<string> p;
+	str s1;
+	str s2;
+	cin >> s1 >> s2;
+	for (int i = 0; i < s1.size()-1; ++i)
+	{
+		str s = "";
+		s += s1[i];
+		s += s1[i + 1];
+		vec.push_back(s);
+	}
+	for (int i = 0; i < s2.size() - 1; ++i)
+	{
+		str s = "";
+		s += s2[i];
+		s += s2[i + 1];
+		set2.insert(s);
+	}
+	int k = 0;
+	for (auto x : vec)
+	{
+		if (find(set2.begin(), set2.end(), x) != set2.end())
+		{
+			k += count(vec.begin(), vec.end(), x);
+			set2.erase(x);
+		}
+		//cout << k << " ";
+	}
+	cout << k;
+    
+
+map<string, int> m;
+	map<string, int> map;
+	int n;
+	cin >> n;
+	vs strs(n);
+	for (auto& elem : strs)
+	{
+		cin >> elem;
+	}
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < strs[i].size(); ++j)
+		{
+			string a = "";
+			if (j == strs[i].size() - 1)
+			{
+				a += strs[i][j];
+				a += strs[i][0];
+			}
+			else
+			{
+				a += strs[i][j];
+				a += strs[i][j+1];
+			}
+			++map[a];
+		}
+	}
+	for (auto& x : map)
+	{
+		if (x.first[0] != x.first[1])
+		{
+			m[x.first] += map[x.first];
+			map[x.first] = 0;
+			str s = rev(x.first);
+			m[x.first] += map[s];
+			map[s] = 0;
+		}
+		else
+		{
+			m[x.first] = map[x.first];
+			map[x.first] = 0;
+		}
+	}
+	int max = -(1 << 30);
+	for (auto x : m)
+	{
+		if (max < x.second)
+		{
+			max = x.second;
+		}
+	}
+	for (auto x : m)
+	{
+		if (x.second == max)
+		{
+			cout << x.first << "\n";
+		}
+	}
+
+	class node
+{
+public:
+	node* prev;
+	node* next;
+	int num;
+	node(int num) : num(num), prev(nullptr), next(nullptr) {}
+};
+
+//template<class t>
+class List
+{
+	node* first;
+	node* last;
+public:
+	List() : first(nullptr), last(nullptr) {}
+	bool empty()
+	{
+		return first == nullptr && last == nullptr;
+	}
+	void push_back(int a)
+	{
+		node* p = new node(a);
+		if (empty())
+		{
+			first = p;
+			last = p;
+		}
+		else
+		{
+			p->prev = last;
+			last->next = p;
+			last = p;
+		}
+	}
+
+	void push_front(int a)
+	{
+		node* p = new node(a);
+		if (empty())
+		{
+			first = p;
+			last = p;
+		}
+		else
+		{
+			//До того p->next = frist не было
+			p->next = first;
+			first->prev = p;
+			first = p;
+		}
+	}
+
+	void pop_back()
+	{
+		if (empty()) {
+			// Handle empty list case
+		}
+		else if (first == last) {
+			// Only one element in the list
+			delete first;
+			first = last = nullptr;
+		}
+		else {
+			node* p = last;
+			last = p->prev;
+			if (last)
+			{
+				last->next = nullptr;
+			}
+			delete p;
+		}
+	}
+
+	void pop_front()
+	{
+		if (empty()) {}
+		else
+		{
+			node* p = first;
+			first = p->next;
+			delete p;
+		}
+	}
+
+	void print()
+	{
+		node* p = first;
+		while (p)
+		{
+			cout << p->num << " ";
+			p = p->next;
+		}
+		cout << endl;
+	}
+
+	node* find(int number)
+	{
+		node* p = first;
+		while (p && p->num != number) p = p->next;
+		return (p == nullptr) ? p : nullptr;
+	}
+
+	node* operator[](int index)
+	{
+		if (empty()) return nullptr;
+		else
+		{
+			node* p = first;
+			for (int i = 0; i < index; ++i)
+			{
+				p = p->next;
+				if (!p) return nullptr;
+			
+			}
+			return p;
+		}
+	}
+
+	void push(int number, int index)
+	{
+		if (empty())
+		{
+			push_back(number);
+		}
+		else if (index == 0)
+		{
+			push_front(number);
+		}
+		else
+		{
+			node* p = first;
+			for (int i = 0; i < index-1; ++i)
+			{
+				p = p->next;
+				if (!p) return ;
+			}
+			if (!p->next)
+			{
+				push_back(number);
+			}
+			else
+			{
+				node* new_node = new node(number);
+				new_node->next = p->next;
+				new_node->prev = p;
+				p->next->prev = new_node;
+				p->next = new_node;
+			}
+		}
+	}
+
+	void pop(int index)
+	{
+		if (empty())
+		{
+		}
+		else if (index == 0)
+		{
+			pop_front();
+		}
+		else
+		{
+			node* p = first;
+			for (int i = 0; i < index; ++i)
+			{
+				p = p->next;
+				if (!p) return;
+			}
+			if (!p->next) {}
+			else
+			{
+				p->next->prev = p->prev;
+				p->prev->next = p->next;
+				delete p;
+			}
+		}
+	}
+};
+
+//template<class t>
+
+int main()
+{
+	List l;
+	l.push_back(5);
+	l.push_back(10);
+	l.push_front(2);
+	l.push_back(123);
+	l.pop(2);
+	l.print();
+	return 0;
+}

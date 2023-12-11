@@ -1,0 +1,372 @@
+int n,k;
+	cin >> n >> k;
+	int l;
+	if (n % k == 0)
+	{
+		l = n/k;
+	}
+	else
+	{
+		l = n/k;
+	}
+	if (k == 1)
+	{
+		cout << n;
+	}
+	else
+	{
+		if ((n) % k == 0)
+		{
+			cout << l + k - 1;
+		}
+		else
+		{
+			cout << l + k;
+		}
+	}
+
+	int n, m, k, c;
+	cin >> n >> m >> k >> c;
+	int count = 0;
+	count += (n / k) * m;
+	count += (m / k) * (n % k);
+	if (c > m)
+	{
+		n -= c - m;
+		c = m;
+	}
+	if (n > 0)
+	{
+		count += min(c, n);
+		c += k;
+		if (c > m)
+		{
+			n -= c - m;
+			c = m;
+			if (n > 0)
+			{
+				count += min(c, n);
+			}
+		}
+	}
+	cout << count;
+
+	int n;
+	cin >> n;
+	int k = 1;
+	while (k < n)
+	{
+		n -= k;
+		cout << k << " ";
+		k *= 2;
+	}
+	if (n > 0)
+	{
+		cout << n;
+	}
+
+	long long m, n;
+	cin >> m >> n;
+	if (m > (n * (n + 1) / 2))
+	{
+		cout << 0;
+	}
+	else
+	{
+		while (m > n)
+		{
+			cout << n << " ";
+			m -= n;
+			--n;
+		}
+		if (m > 0)
+		{
+			cout << m;
+		}
+	}
+
+	#include <iostream>
+#include <vector>
+#include <iomanip>
+#include <map>
+#include <set>
+#include <string>
+#include <stack>
+#include <queue>
+#include <cmath>
+#include <algorithm>
+#include <complex>
+#include <deque>
+#include <list>
+#include <functional>
+#include <random>
+#include <unordered_map>
+#include <unordered_set>
+#include <forward_list>
+#include <array>
+#include <typeinfo>
+#include <numeric>
+#include <memory>
+using namespace std;
+
+typedef long long ll;
+typedef vector<int> vi;
+typedef vector<bool> vb;
+typedef std::string str;
+typedef vector<vi> vii;
+typedef vector<str> vs;
+typedef stack<int> s;
+typedef queue<int> q;
+typedef deque<int> d;
+typedef vector<pair<int, int>> vpii;
+
+int f(int N, int A, int B, int C, int i)
+{
+	return C+max(A*(N-i),B*(i-1));
+}
+
+void printvec(vi vec)
+{
+	for (auto elem : vec)
+	{
+		cout << elem << " ";
+	}
+	cout << "\n";
+}
+
+void mergesort(vi& vec, int l,int r,int& u)
+{
+	if (l>=r)
+	{
+		return ;
+	}
+	int mid = l + (r - l) / 2;
+	mergesort(vec, l, mid,u);
+	mergesort(vec, mid + 1, r,u);
+	vi lm(mid - l + 1);
+	vi rm(r - mid);
+	for (int i = 0; i < lm.size(); ++i)
+	{
+		lm[i] = vec[l + i];
+	}
+	for (int i = 0; i < rm.size(); ++i)
+	{
+		rm[i] = vec[mid + 1 + i];
+	}
+	int i = 0, j = 0;
+	int k = l;
+	while (i < lm.size() && j < rm.size())
+	{
+		if (lm[i] > rm[j])
+		{
+			vec[k++] = rm[j++];
+			u += (lm.size() - i);
+
+		}
+		else
+		{
+			vec[k++] = lm[i++];
+		}
+	}
+	while (i < lm.size())
+	{
+		vec[k++] = lm[i++];
+	}
+	while (i < rm.size())
+	{
+		vec[k++] = rm[j++];
+	}
+}
+
+void inputvec(vi& vec)
+{
+	for (auto& elem : vec)
+	{
+		cin >> elem;
+	}
+}
+ 
+int main()
+{
+	int m, n;
+	cin >> m >> n;
+	ll k = min((n+1) / 2, (m+1) / 2);
+
+	cout << k << "\n";
+	if (n < 2 || m < 2)
+	{
+		cout << 0;
+	}
+	else if (m == 2 && n == 3)
+	{
+		cout << 4;
+	}
+	else if (m == 3 && n == 2)
+	{
+		cout << 5;
+	}
+	else
+	{
+		if (m - 2 * k + 1 < 2)
+		{
+			cout << (m + n - 2 * k) * k + n - (n-2*k+1);
+
+		}
+		else
+		{
+			cout << (m + n - 2 * k) * k + n;
+		}
+	}
+	return 0;
+}
+
+int n;
+	cin >> n;
+	vcchar table(n, vchar(n));
+	vpii vecpair;
+	vpii vec;
+	char s = 'X';
+	bool f = 1;
+	for (int i = 0; i < n; ++i)
+	{
+		//int y = i + 1;
+		for (int j = 0; j < n; ++j)
+		{
+			//int x = j + 1;
+			char a;
+			cin >> a;
+			table[i][j] = a;
+			if (a == '#')
+			{
+				vecpair.push_back({ j + 1, i + 1 });
+			}
+			else
+			{
+				vec.push_back({ j + 1, i + 1 });
+			}
+		}
+	}
+	sort(vecpair.begin(), vecpair.end());
+	sort(vec.begin(), vec.end());
+	/*for (auto it : vecpair)
+	{
+		cout << it.first << " " << it.second << "\n";
+	}*/
+	pii parx;
+	pii pary;
+	int min = 15, min2 = 15;
+	int max = -1, max2 = -1;
+	for (auto elem : vecpair)
+	{
+		if (elem.first < min)
+		{
+			min = elem.first;
+		}
+		if (elem.second < min2)
+		{
+			min2 = elem.second;
+		}
+		pary.first = min2;
+		parx.first = min;
+	}
+	for (auto elem : vecpair)
+	{
+		if (elem.first > max)
+		{
+			max = elem.first;
+		}
+		if (elem.second > max2)
+		{
+			max2 = elem.second;
+		}
+		pary.second = max2;
+		parx.second = max;
+	}
+	//cout << parx.first << " " << parx.second << " " << pary.first << " " << pary.second << "\n";
+	for (int i = pary.first-1; i < pary.second; ++i)
+	{
+		//int y = i + 1;
+		for (int j = parx.first - 1; j < parx.second; ++j)
+		{
+			if (table[i][j] == '*')
+			{
+				f = 0;
+				break;
+			}
+		}
+		if (!f) break;
+	}
+	if (f) cout << 'I';
+	else
+	{
+		bool f1 = 1;
+		pii parx1;
+		pii pary1;
+		int min = 15, min2 = 15;
+		int max = -1, max2 = -1;
+		for (auto elem : vec)
+		{
+			if (elem.first < min)
+			{
+				min = elem.first;
+			}
+			if (elem.second < min2)
+			{
+				min2 = elem.second;
+			}
+			pary1.first = min2;
+			parx1.first = min;
+		}
+		for (auto elem : vec)
+		{
+			if (elem.first > max)
+			{
+				max = elem.first;
+			}
+			if (elem.second > max2)
+			{
+				max2 = elem.second;
+			}
+			pary1.second = max2;
+			parx1.second = max;
+		}
+		for (int i = pary1.first - 1; i < pary1.second; ++i)
+		{
+			//int y = i + 1;
+			for (int j = parx1.first - 1; j < parx1.second; ++j)
+			{
+				if (table[i][j] == '#')
+				{
+					f1 = 0;
+					break;
+				}
+			}
+			if (!f1) break;
+		}
+		if (!f1) cout << 'X';
+		else
+		{
+			if (parx1.second == n && pary1.first != 1 && pary1.second != n && parx1.second != 1) cout << "C";
+			else if (parx1.second != n && pary1.first != 1 && pary1.second != n && parx1.second != 1) cout << "O";
+			else if (parx1.second == n && pary1.first == 1 && pary1.second != n && parx1.second != 1) cout << "L";
+			else cout << "X";
+		}
+	}
+
+	int dis1, dis2, c1, c2;
+	cin >> dis1 >> dis2 >> c1 >> c2;
+	int min1, min2, max1, max2;
+	min1 = (c1 - 1) * (dis1 + 1) + 1;
+	max1 = c1 * (dis1 + 1) + dis1;
+	min2 = (c2 - 1) * (dis2 + 1) + 1;
+	max2 = c2 * (dis2 + 1) + dis2;
+	//cout << min1 << " " << min2 << " " << max1 << " " << max2 << "\n";
+	if (min1 > max2 || min2 > max1)
+	{
+		cout << -1;
+	}
+	else
+	{
+		cout << max(min1, min2) << " " << min(max1, max2);
+	}
+	return 0;
